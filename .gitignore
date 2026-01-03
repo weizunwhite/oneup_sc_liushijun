@@ -1,0 +1,8 @@
+.pio/
+.claude/
+%LOCALAPPDATA%/
+arduino-cli.exe
+arduino-cli.zip
+backup_libs/
+nul
+MK8000TR7.9-GC_V2.0_1.pdf
