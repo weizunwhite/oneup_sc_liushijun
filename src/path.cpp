@@ -58,7 +58,7 @@ void Path::recordStep(PathActionType action) {
 
 bool Path::startReturning() {
     if (_stepCount == 0) {
-        DEBUG_PRINTLN("路径为空，无法归位");
+        DEBUG_PRINTLN("?????????");
         _isReturning = false;
         return false;
     }
@@ -68,16 +68,19 @@ bool Path::startReturning() {
     }
 
     _isReturning = true;
-    _currentReturnStep = _stepCount - 1; // 从最后一步开始
+    _currentReturnStep = 0; // ????????
     _returnStepStartTime = millis();
 
-    // 执行第一步（反向）
     PathStep step = _steps[_currentReturnStep];
-    executeAction(getReverseAction(step.action));
+    executeAction(step.action);
 
-    DEBUG_PRINTLN("开始自动归位..");
+    DEBUG_PRINTLN("????????..");
     return true;
 }
+
+
+
+
 
 void Path::cancelReturning() {
     if (!_isReturning) return;
@@ -90,31 +93,34 @@ void Path::cancelReturning() {
 bool Path::updateReturning() {
     if (!_isReturning) return false;
 
-    if (_currentReturnStep < 0) {
+    if (_currentReturnStep >= _stepCount) {
         motor.stop();
         _isReturning = false;
-        DEBUG_PRINTLN("归位完成");
+        DEBUG_PRINTLN("????");
         return false;
     }
 
     PathStep currentStep = _steps[_currentReturnStep];
 
-    // 检查当前步骤是否执行完成
+    // ????????????
     if (millis() - _returnStepStartTime >= currentStep.duration) {
-        _currentReturnStep--;
+        _currentReturnStep++;
 
-        if (_currentReturnStep >= 0) {
-            // 执行下一步（反向）
+        if (_currentReturnStep < _stepCount) {
             _returnStepStartTime = millis();
             PathStep nextStep = _steps[_currentReturnStep];
-            executeAction(getReverseAction(nextStep.action));
+            executeAction(nextStep.action);
 
-            DEBUG_PRINTF("执行步骤 %d: Act=%d\n", _currentReturnStep, getReverseAction(nextStep.action));
+            DEBUG_PRINTF("???? %d: Act=%d\n", _currentReturnStep, nextStep.action);
         }
     }
 
     return true;
 }
+
+
+
+
 
 void Path::executeAction(PathActionType action) {
     switch (action) {

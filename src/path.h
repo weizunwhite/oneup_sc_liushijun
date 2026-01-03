@@ -61,7 +61,7 @@ public:
     int getStepCount() const { return _stepCount; }
     bool isRecording() const { return _isRecording; }
     bool isReturning() const { return _isReturning; }
-    int getRemainingSteps() const { return (_isReturning && _currentReturnStep >= 0) ? _currentReturnStep + 1 : 0; }
+    int getRemainingSteps() const { return (_isReturning && _currentReturnStep >= 0 && _currentReturnStep < _stepCount) ? (_stepCount - _currentReturnStep) : 0; }
 
 private:
     PathStep _steps[PATH_MAX_STEPS];

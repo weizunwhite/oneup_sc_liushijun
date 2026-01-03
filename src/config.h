@@ -79,6 +79,7 @@ const char* const MODE_NAMES[] = {
 // --- 按钮 ---
 #define BUTTON_PIN 4
 #define BUTTON_LONG_PRESS_TIME 1000  // 长按时间阈值 (ms)
+#define BUTTON_DOUBLE_CLICK_MS 400   // 双击间隔 (ms)
 
 // --- 蜂鸣器 ---
 // ⚠️ 避免使用strapping pins (0,2,4,5,12,15)
@@ -129,6 +130,8 @@ const char* const MODE_NAMES[] = {
 
 // 称重参数
 #define WEIGHT_OVERLOAD_THRESHOLD 5000.0f // 5kg
+#define WEIGHT_WARNING_THRESHOLD 1000.0f  // 1kg
+#define WEIGHT_WARNING_COOLDOWN_MS 3000   // 超重提示间隔 (ms)
 
 // 路径记录参数
 #define PATH_MAX_STEPS 100
@@ -136,6 +139,8 @@ const char* const MODE_NAMES[] = {
 // 蜂鸣器参数
 #define BUZZER_BEEP_DURATION 200    // 蜂鸣持续时间 (ms)
 #define BUZZER_BEEP_INTERVAL 1000   // 蜂鸣间隔时间 (ms)
+#define BUZZER_WARN_DURATION 120    // 超重提示蜂鸣时长 (ms)
+#define BUZZER_WARN_INTERVAL 120    // 超重提示间隔 (ms)
 
 // LED灯条参数
 #define LED_BRIGHTNESS 128          // LED亮度 (0-255)
@@ -144,6 +149,7 @@ const char* const MODE_NAMES[] = {
 #define LED_COLOR_B 255            // 默认颜色-蓝（白光）
 
 // ==================== 蓝牙指令 ====================
+#define BT_DEVICE_NAME "UWB_Backpack"
 #define BT_CMD_FORWARD  'F'
 #define BT_CMD_BACKWARD 'B'
 #define BT_CMD_LEFT     'L'
