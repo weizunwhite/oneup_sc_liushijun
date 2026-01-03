@@ -12,6 +12,7 @@
 class Motor {
 public:
     void begin();
+    void setSpeed(uint8_t forward, uint8_t turn);
     void forward();
     void backward();
     void turnLeft();

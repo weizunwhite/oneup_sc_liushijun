@@ -14,12 +14,16 @@
 #include "follow.h"
 #include "path.h"
 #include "buzzer.h"
+#include "led.h"
 
 WorkMode currentMode = MODE_STANDBY;
 volatile bool buttonPressed = false;
 unsigned long lastButtonTime = 0;
 unsigned long lastClickTime = 0;
 bool pendingSingleClick = false;
+bool buttonDown = false;
+unsigned long buttonDownTime = 0;
+bool longPressTriggered = false;
 
 BluetoothSerial SerialBT;
 bool btReady = false;
@@ -61,6 +65,7 @@ void setup() {
     if (!display.begin()) Serial.println("OLED Init Failed!");
     else display.showSplash();
 
+    ledStrip.begin();
     motor.begin();
 
     if (!imu.begin()) Serial.println("IMU Init Failed!");
@@ -80,6 +85,7 @@ void loop() {
 
     uwb.update();
     buzzer.update();
+    ledStrip.update();
 
     static unsigned long lastSensor = 0;
     if (millis() - lastSensor > 100) {
@@ -144,6 +150,14 @@ void runCurrentMode() {
 void setMode(WorkMode nextMode) {
     motor.stop();
     buzzer.stopBeeping();
+
+    if (nextMode == MODE_FOLLOWING) {
+        motor.setSpeed(MOTOR_SPEED_FOLLOW_FORWARD, MOTOR_SPEED_FOLLOW_TURN);
+    } else if (nextMode == MODE_TEACHING || nextMode == MODE_RETURNING) {
+        motor.setSpeed(MOTOR_SPEED_PATH_FORWARD, MOTOR_SPEED_PATH_TURN);
+    } else {
+        motor.setSpeed(MOTOR_SPEED_FORWARD, MOTOR_SPEED_TURN);
+    }
 
     if (currentMode == MODE_TEACHING && path.isRecording()) {
         path.stopRecording();
@@ -232,13 +246,28 @@ void handleButton() {
         buttonPressed = false;
         if (digitalRead(BUTTON_PIN) == LOW) {
             lastButtonTime = now;
-            if (pendingSingleClick && (now - lastClickTime <= BUTTON_DOUBLE_CLICK_MS)) {
-                pendingSingleClick = false;
-                setMode(MODE_RETURNING);
-            } else {
-                pendingSingleClick = true;
-                lastClickTime = now;
+            buttonDown = true;
+            buttonDownTime = now;
+            longPressTriggered = false;
+        }
+    }
+
+    if (buttonDown) {
+        if (digitalRead(BUTTON_PIN) == HIGH) {
+            buttonDown = false;
+            if (!longPressTriggered) {
+                if (pendingSingleClick && (now - lastClickTime <= BUTTON_DOUBLE_CLICK_MS)) {
+                    pendingSingleClick = false;
+                    setMode(MODE_RETURNING);
+                } else {
+                    pendingSingleClick = true;
+                    lastClickTime = now;
+                }
             }
+        } else if (!longPressTriggered && (now - buttonDownTime >= BUTTON_LONG_PRESS_TIME)) {
+            longPressTriggered = true;
+            pendingSingleClick = false;
+            ledStrip.toggle();
         }
     }
 }

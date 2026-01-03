@@ -12,6 +12,8 @@
 
 class LedStrip {
 public:
+    LedStrip() : _strip(LED_STRIP_COUNT, LED_STRIP_PIN, NEO_GRB + NEO_KHZ800) {}
+
     /**
      * @brief 初始化LED灯条
      */

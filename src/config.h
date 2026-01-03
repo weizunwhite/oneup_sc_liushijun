@@ -88,9 +88,9 @@ const char* const MODE_NAMES[] = {
 
 // --- LED灯条 ---
 // 暂时禁用，如需使用请更换到空闲引脚
-// #define LED_STRIP_PIN 12  // WS2812 需要另选引脚
-// #define LED_STRIP_COUNT 8
-#define LED_STRIP_ENABLED 0  // 0=禁用, 1=启用
+#define LED_STRIP_PIN 12
+#define LED_STRIP_COUNT 30
+#define LED_STRIP_ENABLED 1
 
 // --- OLED 参数 ---
 #define SCREEN_WIDTH 128
@@ -123,6 +123,10 @@ const char* const MODE_NAMES[] = {
 #define MOTOR_PWM_RESOLUTION 8      // PWM分辨率 (bits)
 #define MOTOR_SPEED_FORWARD 100     // 前进速度 (0-255)
 #define MOTOR_SPEED_TURN 80         // 转向速度 (0-255)
+#define MOTOR_SPEED_FOLLOW_FORWARD 150
+#define MOTOR_SPEED_FOLLOW_TURN 80
+#define MOTOR_SPEED_PATH_FORWARD 204
+#define MOTOR_SPEED_PATH_TURN 204
 
 // 姿态检测参数
 #define BEND_THRESHOLD 25.0f        // 弯腰阈值
@@ -145,8 +149,8 @@ const char* const MODE_NAMES[] = {
 // LED灯条参数
 #define LED_BRIGHTNESS 128          // LED亮度 (0-255)
 #define LED_COLOR_R 255            // 默认颜色-红
-#define LED_COLOR_G 255            // 默认颜色-绿
-#define LED_COLOR_B 255            // 默认颜色-蓝（白光）
+#define LED_COLOR_G 0
+#define LED_COLOR_B 0
 
 // ==================== 蓝牙指令 ====================
 #define BT_DEVICE_NAME "UWB_Backpack"
